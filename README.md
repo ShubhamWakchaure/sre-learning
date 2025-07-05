@@ -75,3 +75,11 @@ make test       # Run unit tests
 
 ### Notes
     1. You can direclty start , migrate, run  using mak commands
+
+## 🧬 OpenAPI Schema
+
+The OpenAPI schema is available at: [localhost:8000/openapi.json](http://localhost:8000/openapi.json)
+
+You can export it using:
+```bash
+curl http://localhost:8000/openapi.json -o postman_collecton.json
