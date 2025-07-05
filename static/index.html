@@ -1,0 +1,282 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Student CRUD UI</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 600px;
+            margin: 40px auto;
+            padding: 20px;
+            background-color: #f8f9fa;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.05);
+        }
+
+        h1,
+        h2 {
+            text-align: center;
+            color: #333;
+        }
+
+        form {
+            display: flex;
+            flex-direction: column;
+            margin-bottom: 30px;
+        }
+
+        input,
+        select {
+            padding: 10px;
+            margin: 8px 0;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            font-size: 14px;
+        }
+
+        button {
+            padding: 10px;
+            background-color: #007bff;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-weight: bold;
+        }
+
+        button:hover {
+            background-color: #0056b3;
+        }
+
+        ul {
+            list-style-type: none;
+            padding: 0;
+        }
+
+        li {
+            background-color: #fff;
+            padding: 12px;
+            margin-bottom: 10px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+        }
+
+        .student-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+
+        th,
+        td {
+            text-align: left;
+            padding: 12px;
+            border-bottom: 1px solid #ddd;
+        }
+
+        .status-badge {
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-weight: bold;
+            color: white;
+        }
+
+        .status-active {
+            background-color: #28a745;
+        }
+
+        .status-inactive {
+            background-color: #dc3545;
+        }
+
+        .delete-btn {
+            background-color: #ff4d4f;
+            color: white;
+            border: none;
+            padding: 6px 10px;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+
+        .delete-btn:hover {
+            background-color: #cc0000;
+        }
+
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            overflow: auto;
+            background-color: rgba(0, 0, 0, 0.4);
+        }
+
+        .modal-content {
+            background-color: #fff;
+            margin: 10% auto;
+            padding: 20px;
+            border: 1px solid #888;
+            width: 80%;
+            max-width: 400px;
+            border-radius: 10px;
+            box-shadow: 0 0 15px rgba(0, 0, 0, 0.2);
+        }
+
+        .close {
+            color: #aaa;
+            float: right;
+            font-size: 24px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+        .close:hover {
+            color: #000;
+        }
+    </style>
+</head>
+
+
+<!-- Modal for Student Details -->
+<div id="studentModal" class="modal">
+    <div class="modal-content">
+        <span class="close" onclick="closeModal()">&times;</span>
+        <h2>Student Details</h2>
+        <p><strong>Name:</strong> <span id="modal-name"></span></p>
+        <p><strong>Email:</strong> <span id="modal-email"></span></p>
+        <p><strong>Status:</strong> <span id="modal-status"></span></p>
+    </div>
+</div>
+
+
+<body>
+  <h1>Student App</h1>
+
+  <h2 id="form-title">Add Student</h2>
+  <form id="student-form">
+    <!-- 🔒 Hidden field to store ID -->
+    <input type="hidden" id="student-id" />
+    <input id="name" placeholder="Name" required />
+    <input id="email" placeholder="Email" type="email" required />
+    <select id="status">
+      <option value="active">Active</option>
+      <option value="inactive">Inactive</option>
+    </select>
+    <button type="submit" id="form-submit-btn">Add Student</button>
+  </form>
+
+  <h2>All Students</h2>
+  <table id="students-table">
+    <thead>
+      <tr>
+        <th>Name</th>
+        <th>Email</th>
+        <th>Status</th>
+        <th>Actions</th>
+      </tr>
+    </thead>
+    <tbody id="students-body"></tbody>
+  </table>
+
+  <script>
+    const apiUrl = "/api/v1/students/";
+    let allStudents = [];
+
+    async function fetchStudents() {
+      const res = await fetch(apiUrl);
+      allStudents = await res.json();
+      renderStudentList();
+    }
+
+    function renderStudentList() {
+      const tbody = document.getElementById("students-body");
+      tbody.innerHTML = "";
+      allStudents.forEach(student => {
+        const row = document.createElement("tr");
+        row.innerHTML = `
+          <td>${student.name}</td>
+          <td>${student.email}</td>
+          <td><span class="status-badge ${student.status === 'active' ? 'status-active' : 'status-inactive'}">${student.status}</span></td>
+          <td>
+            <button class="edit-btn" onclick="startEdit('${student.id}')">Edit</button>
+            <button class="delete-btn" onclick="deleteStudent('${student.id}')">Delete</button>
+          </td>
+        `;
+        tbody.appendChild(row);
+      });
+    }
+
+    // 👇 Start editing a student
+    function startEdit(id) {
+      const student = allStudents.find(s => s.id === id);
+      if (!student) return;
+
+      document.getElementById("student-id").value = student.id;
+      document.getElementById("name").value = student.name;
+      document.getElementById("email").value = student.email;
+      document.getElementById("status").value = student.status;
+      document.getElementById("form-title").textContent = "Edit Student";
+      document.getElementById("form-submit-btn").textContent = "Update Student";
+    }
+
+    // 👇 Reset form state
+    function resetForm() {
+      document.getElementById("student-id").value = "";
+      document.getElementById("student-form").reset();
+      document.getElementById("form-title").textContent = "Add Student";
+      document.getElementById("form-submit-btn").textContent = "Add Student";
+    }
+
+    // 👇 Add or update student
+    document.getElementById("student-form").addEventListener("submit", async (e) => {
+      e.preventDefault();
+
+      const id = document.getElementById("student-id").value;
+      const name = document.getElementById("name").value;
+      const email = document.getElementById("email").value;
+      const status = document.getElementById("status").value;
+
+      const payload = { name, email, status };
+
+      if (id) {
+        // Update existing student
+        await fetch(apiUrl + id, {
+          method: "PUT",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(payload)
+        });
+      } else {
+        // Create new student
+        await fetch(apiUrl, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(payload)
+        });
+      }
+
+      await fetchStudents();
+      resetForm();
+    });
+
+    // 👇 Delete student
+    async function deleteStudent(id) {
+      await fetch(apiUrl + id, { method: "DELETE" });
+      await fetchStudents();
+    }
+
+    fetchStudents();
+  </script>
+</body>
+
+</html>
