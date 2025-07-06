@@ -32,7 +32,7 @@ cd sre-student-api
 
     ``` bash
     python -m venv .venv-sre-api
-    source .venv\Scripts\activate
+    source .venv\Scripts\activate.ps1
     ```
 - Linux/Mac
     ``` bash
