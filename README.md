@@ -32,12 +32,12 @@ cd sre-student-api
 
     ``` bash
     python -m venv .venv-sre-api
-    source .venv\Scripts\activate.ps1
+    source .venv-sre-api\Scripts\activate.ps1
     ```
 - Linux/Mac
     ``` bash
     python -m venv ..venv-sre-api
-    source .venv/bin/activate 
+    source .venv-sre-api/bin/activate 
     ```
 
 ### 3. Install dependencies
@@ -71,7 +71,12 @@ uvicorn app.main:app --reload
 make run        # Run server
 make migrate    # Run alembic upgrade
 make test       # Run unit tests
+make postman    # Create the json file required for postman 
+make docker build & run # Build the docker image and runs the restapi webserver.
 ```
+
+### 8. Python all the task command
+System where make tooll cannot be installed use the python task.py file do all the build, run and all 
 
 ### Notes
     1. You can direclty start , migrate, run  using mak commands
@@ -83,3 +88,5 @@ The OpenAPI schema is available at: [localhost:8000/openapi.json](http://localho
 You can export it using:
 ```bash
 curl http://localhost:8000/openapi.json -o postman_collecton.json
+
+
