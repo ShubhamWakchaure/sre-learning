@@ -280,6 +280,7 @@ $RECYCLE.BIN/
 
 .venv*
 students.db
+test.db
 .env.local
 
 openapi.json
