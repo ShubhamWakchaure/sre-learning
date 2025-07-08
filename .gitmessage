@@ -1,0 +1,11 @@
+<type>(<milestone#>[.<scope>]): <short summary ≤50 chars>
+
+<Explain the ‘why’ and the ‘what’ in context of the milestone>
+- Reference milestone goal (e.g., db setup, API container)
+- Talk about expectations satisfied (e.g., migrations auto-run)
+
+BREAKING CHANGE: <describe if updates or environment have changed>
+
+Footer:
+- Milestone #<number>
+- Closes #<issue-number> (optional)
