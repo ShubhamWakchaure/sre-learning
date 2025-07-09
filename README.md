@@ -24,7 +24,7 @@ Include:
 ### 1. Clone this repo
 
 ```bash
-git clone https://github.com/your-username/sre-student-api.git
+git clone https://github.com/ShubhamWakchaure/sre-student-api.git
 cd sre-student-api
 ```
 ### 2. Setup python virtual environment
