@@ -88,5 +88,6 @@ The OpenAPI schema is available at: [localhost:8000/openapi.json](http://localho
 You can export it using:
 ```bash
 curl http://localhost:8000/openapi.json -o postman_collecton.json
+```
 
 
