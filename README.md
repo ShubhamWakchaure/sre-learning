@@ -79,7 +79,7 @@ make docker build & run # Build the docker image and runs the restapi webserver.
 System where make tooll cannot be installed use the python task.py file do all the build, run and all 
 
 ### Notes
-    1. You can direclty start , migrate, run  using mak commands
+    1. You can direclty start , migrate, run  using make commands
 
 ## 🧬 OpenAPI Schema
 
