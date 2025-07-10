@@ -1,0 +1,31 @@
+services:
+  db:
+    image: postgres:16
+    container_name: postgres-db
+    ports:
+      - 5432:5432
+    environment:
+      DB_HOST: ${DB_HOST}
+      DB_PORT: ${DB_PORT}
+      POSTGRES_DB: ${POSTGRES_DB}
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+
+  fastapi-web-server:
+    build: 
+      context: .
+    container_name: fastapi-web-server-backend
+    depends_on:
+      - db
+    ports:
+      - 8000:8000
+    environment:
+      DATABASE_URL: ${DATABASE_URL}
+    command: >
+      sh -c "
+      ./wait_for_db.sh &&
+      alembic upgrade head &&
+      uvicorn app.main:app --host 0.0.0.0 --port 8000
+      "
+
+     
