@@ -21,6 +21,11 @@ Include:
 
 ## How to  Get Started
 
+### Below tools are required for this project
+1. make
+2. docker desktop
+3. Postman (Optional)
+
 ### 1. Clone this repo
 
 ```bash
@@ -72,7 +77,8 @@ make run        # Run server
 make migrate    # Run alembic upgrade
 make test       # Run unit tests
 make postman    # Create the json file required for postman 
-make docker build & run # Build the docker image and runs the restapi webserver.
+make up # It will make the all the required containers up
+make down # It will Remove all the container,networks created earliers.
 ```
 
 ### 8. Python all the task command
