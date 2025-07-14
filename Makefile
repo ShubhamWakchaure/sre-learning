@@ -14,7 +14,20 @@ postman:
 test:
 	pytest -v --disable-warnings
 
-docker build & run:
-	VERSION=$(cat VERSION)
-	docker build -t sre-student-api:VERSION
-	docker run sre-student-api:VERSION
+VERSION := $(shell cat VERSION)
+
+docker-build:
+	docker build -t sre-student-api:$(VERSION) .
+
+docker-run:
+	docker run sre-student-api:$(VERSION)
+
+docker: docker-build docker-run
+
+up:
+	docker-compose --env-file .env.local up --build
+
+down:
+	docker-compose down
+
+

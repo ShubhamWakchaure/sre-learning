@@ -1,6 +1,9 @@
 from sqlalchemy.orm import Session
 from app import models, schemas
 import uuid
+import logging
+
+logger = logging.getLogger(__name__)
 
 def create_student(db: Session, student: schemas.StudentIn):
     db_student = models.Student(id=str(uuid.uuid4()), **student.dict())
@@ -22,10 +25,13 @@ def update_student(db: Session, student_id: str, student: schemas.StudentUpdate)
 
     # Only update fields if they are provided
     if student.name is not None:
+        logger.info("Updating name")
         db_student.name = student.name
     if student.email is not None:
+        logger.info("Updating email")
         db_student.email = student.email
     if student.status is not None:
+        logger.info("Updating status")
         db_student.status = student.status
 
     db.commit()
