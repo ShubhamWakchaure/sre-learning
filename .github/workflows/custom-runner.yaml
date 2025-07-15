@@ -2,7 +2,7 @@ name: FastAPI CI
 
 on:
   push:
-    branches: [main]
+    branches: [main, feature/milestone4]
     paths:
       - app/*
       - migrations/*
