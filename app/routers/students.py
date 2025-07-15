@@ -28,6 +28,7 @@ def get_all_students(db: Session = Depends(get_db)):
 
 @router.get("/{student_id}", response_model=schemas.StudentOut)
 def get_student(student_id: str, db: Session = Depends(get_db)):
+    logger.info('Going to get the students details')
     student = crud.get_student(db, student_id)
     if not student:
         raise HTTPException(status_code=404, detail="Student not found")
