@@ -1,10 +1,32 @@
-name: Must run on custom runner
+name: FastAPI CI
 
-on: push
+on:
+  push:
+    branches: [main]
+    paths:
+      - app/*
+      - migrations/*
+      - static/*
+      - tests/*
 
 jobs:
-  init:
-    runs-on: self-hosted
+  ci:
+    runs-on: ubuntu-latest
+
     steps:
-      - run: echo 'hello cloudgurus this is testing of custom runner'
-      - run: $HOSTNAME
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.11'
+
+      - name: Install flake8
+        run: pip install -r requirements.txt flake8
+
+      - name: Run CI pipeline via Makefile
+        env:
+          DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
+          DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
+        run: make ci
