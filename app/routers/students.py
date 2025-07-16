@@ -40,5 +40,6 @@ def update_student(student_id: str, student: schemas.StudentUpdate, db: Session 
 
 @router.delete("/{student_id}")
 def delete_student(student_id: str, db: Session = Depends(get_db)):
+    logger.info('Going to delete the student.')
     crud.delete_student(db, student_id)
     return {"message": "Student deleted"}
