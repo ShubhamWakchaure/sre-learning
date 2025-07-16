@@ -2,12 +2,12 @@ name: FastAPI CI
 
 on:
   push:
-    branches: [main, feature/milestone4 ]
-    paths:
-      - app/**
-      - migrations/**
-      - static/**
-      - tests/**
+    branches: [feature/milestone4 ]
+    # paths:
+    #   - app/**
+    #   - migrations/**
+    #   - static/**
+    #   - tests/**
 
 jobs:
   ci:
