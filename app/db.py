@@ -6,6 +6,11 @@ import os
 load_dotenv(dotenv_path=".env.local")
 
 DATABASE_URL = os.getenv("DATABASE_URL")
+print(DATABASE_URL)
+
+if not os.path.exists("test.db"):
+    print("Going to create the temporary db")
+    open("test.db", "a").close()
 
 # Needed for SQLite to avoid threading issues
 connect_args = {"check_same_thread": False} if DATABASE_URL.startswith("sqlite") else {}

@@ -86,7 +86,7 @@ def simulate_error():
 
 @router.get("/simulate/timeout")
 def simulate_timeout():
-    time_sec =random.randint(0, 60)
+    time_sec = random.randint(0, 60)
     time.sleep(time_sec)
     return {"status": "delayed response", "seconds": time_sec}
 

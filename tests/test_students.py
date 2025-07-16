@@ -10,6 +10,7 @@ def clear_students():
     db.query(Student).delete()
     db.commit()
 
+
 client = TestClient(app)
 
 def test_healthcheck():
