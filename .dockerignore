@@ -60,5 +60,8 @@ Thumbs.db
 # Postman collections (optional)
 *.postman_collection.json
 
+# Github workflows
+.github/workflow/*
+
 # Tasks or local CLI helpers (optional)
 tasks.py
