@@ -12,7 +12,7 @@ on:
     inputs:
       description:
         description: 'Reason for triggering the workflow manually'
-        required: true
+        required: false
         default: ''
 
 jobs:
