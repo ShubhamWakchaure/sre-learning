@@ -11,8 +11,9 @@ on:
   workflow_dispatch:
     inputs:
       description:
-      required: true
-      default: ''
+        description: 'Reason for triggering the workflow manually'
+        required: true
+        default: ''
 
 jobs:
   ci:
