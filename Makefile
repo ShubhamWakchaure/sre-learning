@@ -33,7 +33,7 @@ docker-login:
 	echo "$$DOCKER_PASSWORD" | docker login -u "$$DOCKER_USERNAME" --password-stdin
 
 docker-build:
-	docker build -t $(FULL_IMAGE_NAME) .
+	docker build -t $(FULL_IMAGE_NAME) . --progress=plain
 
 docker-push:
 	docker push $(FULL_IMAGE_NAME)
