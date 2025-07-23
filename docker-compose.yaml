@@ -11,14 +11,12 @@ services:
       POSTGRES_USER: ${POSTGRES_USER}
       POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
 
-  fastapi-web-server:
-    build: 
+  alembic:
+    build:
       context: .
-    container_name: fastapi-web-server-backend
+    container_name: alembic-migration
     depends_on:
       - db
-    ports:
-      - 8000:8000
     environment:
       DATABASE_URL: ${DATABASE_URL}
       POSTGRES_DB: ${POSTGRES_DB}
@@ -26,9 +24,72 @@ services:
       POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
     command: >
       sh -c "
-      ./wait_for_db.sh &&
-      alembic upgrade head &&
+      chmod +x /wait_for_db.sh &&
+      /wait_for_db.sh &&
+      alembic upgrade head
+      "
+
+  fastapi-web-server-1:
+    build: 
+      context: .
+    container_name: fastapi-web-server-1
+    depends_on:
+      - db
+      - alembic
+    ports:
+      - 8000:8000
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8000/docs"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    environment:
+      DATABASE_URL: ${DATABASE_URL}
+      POSTGRES_DB: ${POSTGRES_DB}
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+    command: >
+      sh -c "
       uvicorn app.main:app --host 0.0.0.0 --port 8000
       "
 
-     
+  fastapi-web-server-2:
+    build: 
+      context: .
+    container_name: fastapi-web-server-2
+    depends_on:
+      - db
+      - alembic
+    ports:
+      - 8001:8000
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8000/docs"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    environment:
+      DATABASE_URL: ${DATABASE_URL}
+      POSTGRES_DB: ${POSTGRES_DB}
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+    command: >
+      sh -c "
+      uvicorn app.main:app --host 0.0.0.0 --port 8000
+      "
+  nginx:
+    image: nginx:latest
+    container_name: nginx-load-balancer
+    ports:
+      - "8080:80"
+    volumes:
+      - ./nginx/nginx.conf:/etc/nginx/nginx.conf:ro
+      - ./wait_for_fastapi.sh:/wait_for_fastapi.sh
+    depends_on:
+      - fastapi-web-server-1
+      - fastapi-web-server-2
+    restart: always
+    command: ["sh", "-c", "chmod +x /wait_for_fastapi.sh && /wait_for_fastapi.sh && nginx -g 'daemon off;'"]
+    environment:
+      FASTAPI_HOSTS: "fastapi-web-server-1 fastapi-web-server-2"
+      FASTAPI_PORT: 8000
+      FASTAPI_PATH: /healthcheck
