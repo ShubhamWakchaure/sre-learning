@@ -9,7 +9,8 @@ RUN apt-get update && apt-get install -y gcc libpq-dev
 WORKDIR /app
 
 COPY requirements.txt .
-RUN pip install --no-cache-dir -r requirements.txt
+RUN pip install --no-cache-dir --trusted-host pypi.org --trusted-host pypi.python.org \
+--trusted-host files.pythonhosted.org -r requirements.txt
 
 # ---------- Stage 2: Final lightweight app image ----------
 FROM python:3.13-slim AS final
@@ -28,9 +29,12 @@ COPY --from=builder /usr/local /usr/local
 # Copy app code and wait script
 COPY . .
 
-# ✅ Set executable permission on wait script
-RUN chmod +x /app/wait_for_db.sh
+# Copy the script
+COPY ./wait_for_db.sh /wait_for_db.sh
+RUN chmod +x /wait_for_db.sh
+
 
 EXPOSE 8000
 
-CMD ["sh", "-c", "/app/wait_for_db.sh && alembic upgrade head && uvicorn app.main:app --host 0.0.0.0 --port 8000"]
+CMD ["sh", "-c", "/wait_for_db.sh && alembic upgrade head && uvicorn app.main:app --host 0.0.0.0 --port 8000"]
+# CMD ["sh", "-c", "alembic upgrade head && uvicorn app.main:app --host 0.0.0.0 --port 8000"]
