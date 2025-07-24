@@ -1,6 +1,6 @@
 ## Student CRUD API Web server.
 
-A simple student API server for mangang student records (create, red, update ,delete), bult usng fast api
+A simple student API server for managing student records (create, reda, update ,delete), built using fast api
 
 Include:
 - RESTFUL APIs versioned
@@ -8,6 +8,7 @@ Include:
 - Simple static UI
 - Postman collection for testng
 - Environment based configurations
+- Dockerized application
 
 ## Tech Stack
 
@@ -18,6 +19,8 @@ Include:
 - HTML/JS UI
 - Pydantic
 - Uvicorn
+- Docker
+- Nginx
 
 ## How to  Get Started
 
@@ -77,12 +80,12 @@ make run        # Run server
 make migrate    # Run alembic upgrade
 make test       # Run unit tests
 make postman    # Create the json file required for postman 
-make up # It will make the all the required containers up
-make down # It will Remove all the container,networks created earliers.
+make up         # It will make the all the required containers up
+make down       # It will Remove all the container,networks created earliers.
 ```
 
 ### 8. Python all the task command
-System where make tooll cannot be installed use the python task.py file do all the build, run and all 
+System where make tool cannot be installed use the python task.py file do all the build, run and all 
 
 ### Notes
     1. You can direclty start , migrate, run  using make commands
